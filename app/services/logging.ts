@@ -1,15 +1,27 @@
 import { waitUntil } from "@vercel/functions"
-import asyncLog from "./asyncLog"
+import AsyncLogger from "./asyncLog"
 
-export default function info(log: string) {
-    waitUntil(asyncLog(log))
 
-    const promise = new Promise<void>((resolve) => {
-        setTimeout(async () => {
-            try { await asyncLog(`In a promise of 10 seconds: ${log}`) }
-            finally { resolve() }
-        }, 10_000)
-    })
+class Logger {
+    asyncLogger: AsyncLogger
 
-    waitUntil(promise)
+    public constructor() {
+        this.asyncLogger = new AsyncLogger()
+    }
+
+    public info(log: string) {
+        waitUntil(this.asyncLogger.asyncLog(log))
+    
+        const promise = new Promise<void>((resolve) => {
+            setTimeout(async () => {
+                try { await this.asyncLogger.asyncLog(`In a promise of 10 seconds: ${log}`) }
+                finally { resolve() }
+            }, 10_000)
+        })
+    
+        waitUntil(promise)
+    }
 }
+
+const logger = new Logger()
+export default logger
