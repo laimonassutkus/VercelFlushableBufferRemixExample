@@ -1,4 +1,13 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
+import info from "~/services/logging"
+
+export async function loader({ request, params }: LoaderFunctionArgs) {
+
+  // We are logging upon initial page load.
+  info("Hello from root page!")
+
+  return null
+}
 
 export const meta: MetaFunction = () => {
   return [
