@@ -1,11 +1,14 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
+import { Form } from "@remix-run/react";
 import info from "~/services/logging"
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  return null
+}
 
-  // We are logging upon initial page load.
+export async function action({ request, params }: ActionFunctionArgs) {
+  // We are logging upon every request.
   info("Hello from root page!")
-
   return null
 }
 
@@ -41,6 +44,11 @@ export default function Index() {
           <p className="leading-6 text-gray-700 dark:text-gray-200">
             What&apos;s next?
           </p>
+
+          <Form method="post">
+            <button type="submit">Submit</button>
+          </Form>
+
           <ul>
             {resources.map(({ href, text, icon }) => (
               <li key={href}>
