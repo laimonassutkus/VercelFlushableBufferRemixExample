@@ -1,27 +1,15 @@
-import { waitUntil } from "@vercel/functions"
-import AsyncLogger from "./asyncLog"
+import FlushableBuffer from "./flushableBuffer"
 
+const buffer = new FlushableBuffer<string>(async buffer => {
+    await new Promise<void>(resolve => {
+        setTimeout(() => {
+            buffer.forEach(item => console.log(`Flush action after 10 seconds: ${item}`))
+            resolve()
+        }, 10_000)
+    })
+})
 
-class Logger {
-    asyncLogger: AsyncLogger
-
-    public constructor() {
-        this.asyncLogger = new AsyncLogger()
-    }
-
-    public info(log: string) {
-        waitUntil(this.asyncLogger.asyncLog(log))
-    
-        const promise = new Promise<void>((resolve) => {
-            setTimeout(async () => {
-                try { await this.asyncLogger.asyncLog(`In a promise of 10 seconds: ${log}`) }
-                finally { resolve() }
-            }, 10_000)
-        })
-    
-        waitUntil(promise)
-    }
+export default function info(log: string) {
+    buffer.addToBuffer(log)
+    console.log(`Successfully added log to buffer: ${log}`)
 }
-
-const logger = new Logger()
-export default logger

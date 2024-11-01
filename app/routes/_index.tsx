@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { Form } from "@remix-run/react";
-import logger from "~/services/logging";
+import info from "~/services/logging";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   return null
@@ -8,7 +8,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export async function action({ request, params }: ActionFunctionArgs) {
   // We are logging upon every request.
-  logger.info("Hello from root page!")
+  info("Hello from root page!")
   return null
 }
 
